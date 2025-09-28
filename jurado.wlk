@@ -1,11 +1,11 @@
  import participantes.*
- 
+ import concurso.*
  
  
  object mozart {
     var puntos = 0
     method puntos() = puntos
-    method puntaje(participante) = (participante.calidad()*2).min(10)
+    method puntaje(participante) { puntos = (participante.calidad()*2).min(10) }
     method recibirAjuste() {
         puntos = puntos.min(8)
     }
@@ -26,7 +26,7 @@
     } 
     method recibirAjuste() {
         if(self.estaEntusiasmado()){
-            animo =- 1
+            animo -= 1
         }
     }
  }

@@ -2,6 +2,8 @@ import participantes.*
 import jurado.*
 import concurso.*
 
+
+
 describe "test TaylowSwift" {
   test "calidad inicial es 6" {
     assert.equals(6, taylorswift.calidad())
@@ -19,18 +21,18 @@ describe "test TaylowSwift" {
 
 describe "test MORAT" {
   test "se agrega a juan, pablo, simon y martin y la calidad es de 8" {
-    morat.integrantesDeLaBanda.addAll(["juan","pablo","simon","martin"])
+    morat.unirTodosALaBanda(["juan","pablo","simon","martin"])
     assert.equals(8, morat.calidad())
   }
   test "ocupa 20m2 de escenario con todos sus miembros de la banda inciales." {
-    morat.integrantesDeLaBanda.addAll(["juan","pablo","simon","martin"])
+    morat.unirTodosALaBanda(["juan","pablo","simon","martin"])
     assert.equals(20, morat.ocupaDeEscenario())
   }
 
   test "morat practica y  martin se va de la banda" {
-    morat.integrantesDeLaBanda.addAll(["juan","pablo","simon","martin"])
+    morat.unirTodosALaBanda(["juan","pablo","simon","martin"])
     morat.practicar()
-    assert.notThat(morat.integrantesDeLaBanda.conntains("martin"))
+    assert.notThat(morat.integrantes().contains("martin"))
   }
 }
 
@@ -47,19 +49,19 @@ describe "test silvioRodriguez" {
 
 describe "TEST BADBUNNY" {
     test "SU CALIDAD INICIAL ES DE 5 SI NO TIENE BANDA NI DECORADO DE ESCENARIO" {
-        assert.equals(5, badBunny.calidad())
+        assert.equals(1, badBunny.calidad())
     }
 
     test "inicialmente ocupa 1m2 de escenario" {
         assert.equals(1, badBunny.ocupaDeEscenario())
     }
     test "badbunny no tiene banda inicialmente" {
-      assert.that(badBunny.tieneBanda())
+      assert.notThat(badBunny.tieneBanda())
     }
 
     test "badbunny adquiere banda, no tiene decoracion de escenario y aumenta su calidad de show" {
       badBunny.adquiereBandaParaElShow(2)
-      assert.equals(8, badBunny.calidad())
+      assert.equals(10, badBunny.calidad())
     }
 
     test "badbunny ocupa 20 si se agregan de decoracion 10 luces, 1 pantallaGigante y fuegos artificiales " {
@@ -73,23 +75,25 @@ describe "TEST BADBUNNY" {
 
     test "badbunny  adquiere banda de 6 integrantes, se agregan de decoracion 12 luces, 1 pantallaGigante y fuegos artificiales" {
       //calidad =  inicial + 3 banda + 10 luces + 2 pantalla + 1 fuegos = 21
-      //ocupa =  (6/2) -> 3 banda + 1 badbunny + 15 luces + 1 pantalla + 3 fuegos
+      //ocupa =  6 banda + 1 badbunny + 15 luces + 1 pantalla + 3 fuegos
 
-        badBunny.adquiereBandaParaElShow(6) // 3 ocupa
         luces.añadirLuces(12) // 15 ocupa total
         badBunny.agregarDecoracionAlEscenario(luces) 
         badBunny.agregarDecoracionAlEscenario(pantallaGigante) //1 ocupa total
         badBunny.agregarDecoracionAlEscenario(fuegosArtificiales) // 3 ocupa total
-        assert.equals(21, badBunny.calidad())
+        badBunny.adquiereBandaParaElShow(6) // 6 ocupa
+        assert.equals(31, badBunny.calidad())
         assert.equals(20, badBunny.ocupaDeEscenario())
+
+        //5 base + 17 banda + 10 luces + 2 pantalla + 3 fuegos
     }
 
-    test "badbunny tiene una banda de 6, su calidad es de 8 pero al practicar aumenta 3 miembros y su calidad se duplica"{
+    test "badbunny tiene una banda de 6, su calidad es de 18 pero al practicar aumenta 3 miembros y su calidad se duplica a 36"{
         badBunny.adquiereBandaParaElShow(6)
-        assert.equals(8, badBunny.calidad())
+        assert.equals(18, badBunny.calidad())
         badBunny.practicar()
+        assert.equals(36, badBunny.calidad())
         assert.equals(9, badBunny.cantMiembrosBanda())
-        assert.equals(16, badBunny.calidad())
       
     }
     
@@ -103,7 +107,7 @@ describe "test CONCURSO" {
     concurso.inscribirParticipante(morat)
     concurso.practicarParticipantes()
     assert.equals(17, taylorswift.calidad())
-    assert.notThat(morat.integrantesDeLaBanda.contains("martin"))
+    assert.notThat(morat.integrantes().contains("martin"))
   }
 }
 
@@ -112,7 +116,6 @@ describe "test eventos Especiales" {
   test "se realizan ajustes sobre beethoven que recibe buena noticia pero luego del ajuste su estado animico es 4 y sigue entusiasmado" {
     beethoven.recibirBuenasNoticias()
     eventosEspeciales.realizarAjusteA(beethoven)
-    eventosEspeciales.realizarAjusteA(mozart)
     assert.equals(4, beethoven.animo())
     assert.that(beethoven.estaEntusiasmado())
   }

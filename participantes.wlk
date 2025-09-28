@@ -18,26 +18,28 @@ object taylorswift {
 object morat {
 
     const integrantesDeLaBanda = []
-
+    method integrantes() = integrantesDeLaBanda
     method tieneBanda() = true 
    
     method calidad() = integrantesDeLaBanda.size() * 2
     method ocupaDeEscenario() {
         return(
-            (integrantesDeLaBanda.fold(0, {i => i.length()})).max(concurso.escenario())
+            (integrantesDeLaBanda.fold(0, {acum ,i => acum + i.length()})).max(concurso.escenario())
         )
     }
     
     method unirALaBanda(unaPersona) {integrantesDeLaBanda.add(unaPersona)}
-    
+    method unirTodosALaBanda(listaDePersonas) {integrantesDeLaBanda.addAll(listaDePersonas)}
     method seVaDeLaBanda(unaPersona) {integrantesDeLaBanda.remove(unaPersona)} //agregado para realizar pruebas
 
         //entrenamiento
     
-    method practicar() {self.seVaDeLaBanda(self.integrateConMasDe5Caracteres())}
+    method practicar() {
+        self.integranteConMasDe5Caracteres().forEach({i => self.seVaDeLaBanda(i)})
+    }
     
-    method integrateConMasDe5Caracteres() {
-        return integrantesDeLaBanda.filter({i => i.length()} > 5)
+    method integranteConMasDe5Caracteres() {
+        return integrantesDeLaBanda.filter({i => i.length() > 5})
     }
 
         
@@ -54,33 +56,37 @@ object silvioRodriguez {
 }
 
 object badBunny {
-    
-    var calidad = 5
+    var calidad = 1
     var tieneBanda = false
     var cantMiembrosBanda = 0
-    const decoracionEscenario = []
-    method tieneBanda() = tieneBanda 
-    method calidad() = calidad
-    method ocupaDeEscenario() = (1 + self.cantidadDeDecoracion() + (cantMiembrosBanda / 2)).max(concurso.escenario()) 
 
+    
+    const decoracionEscenario = []
+    
+    method tieneBanda() = tieneBanda 
+
+    method calidad() = calidad + self.calidadDecoracionEscenario()
+    method ocupaDeEscenario() = (1 + self.cantidadDeDecoracion() + cantMiembrosBanda).min(20)
+    
     method cantMiembrosBanda() = cantMiembrosBanda
+    method agregarDecoracionAlEscenario(unObjeto) {
+        decoracionEscenario.add(unObjeto)
+    }
+    //14 
     method adquiereBandaParaElShow(cantidadMiembros) {
         tieneBanda = not(tieneBanda)
         cantMiembrosBanda = cantidadMiembros
-        calidad =+ 3
+        calidad = calidad + 5 + (cantidadMiembros * 2)
     }
 
     method calidadDecoracionEscenario() {
-        calidad = calidad + decoracionEscenario.calidadDeDecorado().sum()
+         return(decoracionEscenario.sum({d => d.calidadDeDecorado()}))
     }
 
-    method agregarDecoracionAlEscenario(unObjeto) {
-        decoracionEscenario.add(unObjeto)
-    } 
     method cantidadDeDecoracion() = decoracionEscenario.sum({d => d.cantidadQueOcupa()})
     method practicar() {
         calidad = calidad * 2
-        cantMiembrosBanda =+ 3
+        cantMiembrosBanda += 3
 
     }
     
@@ -89,7 +95,7 @@ object badBunny {
 //decoraciones posibles
 object luces {
     var cantLuces = 0
-    var cantidadQueOcupa = 0
+ 
     method añadirLuces(cantidad) {
       cantLuces =+ cantidad
     }
@@ -101,9 +107,9 @@ object luces {
         }
     }
     method calidadDeDecorado(){
-        if(cantidadQueOcupa.between(10, 15)){
+        if(self.cantidadQueOcupa().between(10, 15)){
             return(10)
-        }else if(cantidadQueOcupa.between(1, 9)){
+        }else if(self.cantidadQueOcupa().between(1, 9)){
             return(5)
         }else{
             return(0)
@@ -113,7 +119,7 @@ object luces {
 }
 
 object pantallaGigante {
-    method canlidadDeDecorado() = 2 
+    method calidadDeDecorado() = 2 
     method cantidadQueOcupa() = 1
 }
 
